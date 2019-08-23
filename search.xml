@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[Github搭建个人博客步骤详解]]></title>
+    <url>%2F2019%2F08%2F22%2FGithub%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%AD%A5%E9%AA%A4%E8%AF%A6%E8%A7%A3%2F</url>
+    <content type="text"><![CDATA[#Github搭建个人博客步骤详解 Step 1: Github page 登录github后新建一个仓库： 填写必要信息： 进入setting: 然后往下拉，找到github pages，点击choose a theme选择主题： Step 2: Hexo 搭建博客 在安装hexo前需要安装git和node.js下载链接见：https://hexo.io/zh-cn/docs/ 完成如上两个安装步骤后在一个空文件夹单击右键，选择git bash here 在命令行中输入 npm install hexo -g 回车，来安装hexo。等待跳出新的绿色行后 输入hexo -v 检查是否安装成功。如下图即为安装成功 然后输入hexo init 初始化文件夹，完成后显示Start blogging with Hexo这串提示就说明安装成功啦 输入npm install 安装所需要的组件 Step3: 搭桥到github, 将Hexo于Github page 联系起来 分别执行： git config –global user.name “你的GitHub用户名” git config –global user.email “你的GitHub注册邮箱” 然后生成SSH秘钥,执行： ssh-keygen -t rsa -C “你的GitHub注册邮箱” 连续三个回车，生成密钥，最后得到了两个文件：id_rsa和id_rsa.pub（默认存储路径是：C:\Users\Administrator.ssh） 在c盘中找到秘钥所在文件夹，用记事本打开id_rsa文件，并复制全部内容 打开github网站，在头像下侧选择setting 选择SSH and GPG keys 并点击 new SSH key，并将刚才复制的文本粘贴后保存 在命令行中输入ssh -T git@github.com，测试添加ssh是否成功。如果看到Hi后面是你的用户名，就说明成功了 Step4：HEXO部署 用coding编辑器打开 _config.yml文件 拉到最下面 按照如下图格式编辑后保存。特别注意冒号后必须有半角空格 deploy: type: git repo: git@github.com:自己的用户名/自己的用户名.github.io.git branch: master 回到git bash命令行，分别执行如下 hexo clean hexo generate hexo server 每回修改页面后都要进行部署Hexo这三步 然后输入npm install –save hexo-deployer-git 安装插件 之后输入hexo d -g 完成部署，看到红色的就表示成功完成部署！ 网页中输入http://yourgithubname.github.io 就能看到你的博客啦！！！ 大功告成！！]]></content>
+  </entry>
+</search>
