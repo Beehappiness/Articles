@@ -267,11 +267,19 @@
                 
               
 
-              <time title="Created: 2019-08-22 20:35:15 / Modified: 22:31:06" itemprop="dateCreated datePublished" datetime="2019-08-22T20:35:15+08:00">2019-08-22</time>
+              <time title="Created: 2019-08-22 20:35:15" itemprop="dateCreated datePublished" datetime="2019-08-22T20:35:15+08:00">2019-08-22</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-08-26 18:22:43" itemprop="dateModified" datetime="2019-08-26T18:22:43+08:00">2019-08-26</time>
+              </span>
             
           
 
@@ -288,41 +296,41 @@
       
           <p>#<font size="6">Github搭建个人博客步骤详解</font><br></p>
 <p><strong>Step 1: Github page</strong></p>
-<p>登录github后新建一个仓库：<br><img src="https://github.com/Beehappiness/Storage/blob/master/1.jpg" alt></p>
-<p>填写必要信息：<br><img src="https://github.com/Beehappiness/Storage/blob/master/2.jpg" alt></p>
-<p>进入setting:<br><img src="https://github.com/Beehappiness/Storage/blob/master/3.jpg" alt></p>
-<p>然后往下拉，找到github pages，点击choose a theme选择主题：<br><img src="https://github.com/Beehappiness/Storage/blob/master/4.jpg" alt></p>
+<p>登录github后新建一个仓库：<br><img src="https://i.loli.net/2019/08/26/L5Tybp1eNrja7KZ.jpg" alt="1.jpg"></p>
+<p>填写必要信息：<br><img src="https://i.loli.net/2019/08/26/tlf2kq7ISBGJjKT.jpg" alt="2.jpg"></p>
+<p>进入setting:<br><img src="https://i.loli.net/2019/08/26/z75I8eYtfSiHmRn.jpg" alt="3.jpg"></p>
+<p>然后往下拉，找到github pages，点击choose a theme选择主题：<br><img src="https://i.loli.net/2019/08/26/UoNZfKnXjrCbpLc.jpg" alt="4.jpg"></p>
 <p><strong>Step 2: Hexo 搭建博客</strong></p>
 <p>在安装hexo前需要安装git和node.js<br>下载链接见：<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/</a></p>
-<p>完成如上两个安装步骤后在一个空文件夹单击右键，选择git bash here<br><img src="https://github.com/Beehappiness/Storage/blob/master/5.jpg" alt></p>
-<p>在命令行中输入 npm install hexo -g 回车，来安装hexo。等待跳出新的绿色行后<br><img src="https://github.com/Beehappiness/Storage/blob/master/6.jpg" alt></p>
-<p>输入hexo -v 检查是否安装成功。如下图即为安装成功<br><img src="https://github.com/Beehappiness/Storage/blob/master/7.jpg" alt></p>
-<p>然后输入hexo init 初始化文件夹，完成后显示Start blogging with Hexo这串提示就说明安装成功啦<br><img src="https://github.com/Beehappiness/Storage/blob/master/8.jpg" alt></p>
+<p>完成如上两个安装步骤后在一个空文件夹单击右键，选择git bash here<br><img src="https://i.loli.net/2019/08/26/z5RbX9USPvoBL4g.jpg" alt="5.jpg"></p>
+<p>在命令行中输入 npm install hexo -g 回车，来安装hexo。等待跳出新的绿色行后<br><img src="https://i.loli.net/2019/08/26/AvVdfbC39i5ujUl.jpg" alt="6.jpg"></p>
+<p>输入hexo -v 检查是否安装成功。如下图即为安装成功<br><img src="https://i.loli.net/2019/08/26/lcjpIXAqfaWvRB1.jpg" alt="7.jpg"></p>
+<p>然后输入hexo init 初始化文件夹，完成后显示Start blogging with Hexo这串提示就说明安装成功啦<br><img src="https://i.loli.net/2019/08/26/9z1tmIrWNf7uJRU.jpg" alt="8.jpg"></p>
 <p>输入npm install 安装所需要的组件</p>
 <p><strong>Step3: 搭桥到github, 将Hexo于Github page 联系起来</strong></p>
 <p>分别执行：</p>
 <ul>
 <li>git config –global user.name “你的GitHub用户名”</li>
-<li>git config –global user.email “你的GitHub注册邮箱”<br><img src="https://github.com/Beehappiness/Storage/blob/master/9.jpg" alt></li>
+<li>git config –global user.email “你的GitHub注册邮箱”<br><img src="https://i.loli.net/2019/08/26/ENOq1zH9QJgL5Pu.jpg" alt="9.jpg"></li>
 </ul>
 <p>然后生成SSH秘钥,执行：</p>
 <ul>
 <li>ssh-keygen -t rsa -C “你的GitHub注册邮箱”</li>
-<li>连续三个回车，生成密钥，最后得到了两个文件：id_rsa和id_rsa.pub（默认存储路径是：C:\Users\Administrator.ssh）<br><img src="https://github.com/Beehappiness/Storage/blob/master/10.jpg" alt></li>
+<li>连续三个回车，生成密钥，最后得到了两个文件：id_rsa和id_rsa.pub（默认存储路径是：C:\Users\Administrator.ssh）<br><img src="https://i.loli.net/2019/08/26/LTJstlOdhb7VUM3.jpg" alt="10.jpg"></li>
 </ul>
-<p>在c盘中找到秘钥所在文件夹，用记事本打开id_rsa文件，并复制全部内容<br><img src="https://github.com/Beehappiness/Storage/blob/master/11.jpg" alt></p>
-<p>打开github网站，在头像下侧选择setting<br><img src="https://github.com/Beehappiness/Storage/blob/master/12.jpg" alt></p>
-<p>选择SSH and GPG keys 并点击 new SSH key，并将刚才复制的文本粘贴后保存<br><img src="https://github.com/Beehappiness/Storage/blob/master/13.jpg" alt></p>
-<p>在命令行中输入ssh -T <a href="mailto:git@github.com" target="_blank" rel="noopener">git@github.com</a>，测试添加ssh是否成功。如果看到Hi后面是你的用户名，就说明成功了<br><img src="https://github.com/Beehappiness/Storage/blob/master/14.jpg" alt></p>
+<p>在c盘中找到秘钥所在文件夹，用记事本打开id_rsa文件，并复制全部内容<br><img src="https://i.loli.net/2019/08/26/YsDk1lUFBqe2w4W.jpg" alt="11.jpg"></p>
+<p>打开github网站，在头像下侧选择setting<br><img src="https://i.loli.net/2019/08/26/1h3rnlF9BPTomMU.jpg" alt="12.jpg"></p>
+<p>选择SSH and GPG keys 并点击 new SSH key，并将刚才复制的文本粘贴后保存<br><img src="https://i.loli.net/2019/08/26/vOT1RNbsCnV52Ec.jpg" alt="13.jpg"></p>
+<p>在命令行中输入ssh -T <a href="mailto:git@github.com" target="_blank" rel="noopener">git@github.com</a>，测试添加ssh是否成功。如果看到Hi后面是你的用户名，就说明成功了<br><img src="https://i.loli.net/2019/08/26/pF138ndtoQ4mWBw.jpg" alt="14.jpg"></p>
 <p><strong>Step4：HEXO部署</strong></p>
-<p>用coding编辑器打开 _config.yml文件<br><img src="https://github.com/Beehappiness/Storage/blob/master/15.jpg" alt></p>
-<p>拉到最下面<br><img src="https://github.com/Beehappiness/Storage/blob/master/16.jpg" alt></p>
+<p>用coding编辑器打开 _config.yml文件<br><img src="https://i.loli.net/2019/08/26/BWGtbeCpArZjoy1.jpg" alt="15.jpg"></p>
+<p>拉到最下面<br><img src="https://i.loli.net/2019/08/26/VPIfHiT865AneaC.jpg" alt="16.jpg"></p>
 <p>按照如下图格式编辑后保存。特别注意冒号后必须有半角空格</p>
 <ul>
 <li>deploy:<ul>
 <li>type: git</li>
 <li>repo: <a href="mailto:git@github.com" target="_blank" rel="noopener">git@github.com</a>:自己的用户名/自己的用户名.github.io.git</li>
-<li>branch: master<br><img src="https://github.com/Beehappiness/Storage/blob/master/17.jpg" alt></li>
+<li>branch: master<br><img src="https://i.loli.net/2019/08/26/dQPuYR2UZ6qVhJM.jpg" alt="17.jpg"></li>
 </ul>
 </li>
 </ul>
@@ -333,8 +341,8 @@
 <li>hexo server</li>
 </ul>
 <p><em>每回修改页面后都要进行部署Hexo这三步</em></p>
-<p>然后输入npm install –save hexo-deployer-git 安装插件<br><img src="https://github.com/Beehappiness/Storage/blob/master/18.jpg" alt></p>
-<p>之后输入hexo d -g 完成部署，看到红色的就表示成功完成部署！<br><img src="https://github.com/Beehappiness/Storage/blob/master/19.jpg" alt></p>
+<p>然后输入npm install –save hexo-deployer-git 安装插件<br><img src="https://i.loli.net/2019/08/26/M9pZ12GV7gjDKnT.jpg" alt="18.jpg"></p>
+<p>之后输入hexo d -g 完成部署，看到红色的就表示成功完成部署！<br><img src="https://i.loli.net/2019/08/26/mlLpuXqkxd3y2VM.jpg" alt="19.jpg"></p>
 <p>网页中输入<a href="http://yourgithubname.github.io" target="_blank" rel="noopener">http://yourgithubname.github.io</a> 就能看到你的博客啦！！！</p>
 <p><font size="6"><strong><em>大功告成！！</em></strong></font><br></p>
 
