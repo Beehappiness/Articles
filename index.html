@@ -238,6 +238,98 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/28/MySQL8-0-Server-Stop-No-Connnection怎么办？/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Bonnie">
+      <meta itemprop="description" content="Take a Leap of Faith">
+      <meta itemprop="image" content="/images/a03077b6ly1g46hwotkdcj20ek0eldh5.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Love Hyunbin's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="/2019/08/28/MySQL8-0-Server-Stop-No-Connnection怎么办？/" class="post-title-link" itemprop="url">MySQL8.0 Server Stop No Connnection怎么办？</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-08-28 14:50:54 / Modified: 15:50:55" itemprop="dateCreated datePublished" datetime="2019-08-28T14:50:54+08:00">2019-08-28</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <font color="#000000" size="2">
+最近因为导入csv导致MySQL挂了。。。
+打开workbench之后显示no connection 错误，Server status是STOP，想哭o(╥﹏╥)o
+
+<p><img src="https://i.loli.net/2019/08/28/y71arbYpBNwGuRK.png" alt="20160704085332202.png"></p>
+<p>如果你也遇到了这种情况，请参考下面的解决办法，我的系统win10，mysql版本8.0：</p>
+<p>首先查看“我的电脑-右键-管理-服务-MySQL”是否可以直接启动<br><img src="https://i.loli.net/2019/08/28/SUhC5Yf2NI6FkEZ.png" alt="Mysql服务无法启动1.PNG"></p>
+<p>通常会报错，无法启动（如果这么简单就能解决就好了┓( ´∀` )┏），那么继续按照下面的操作。</p>
+<p>以<strong>管理员</strong>身份进入cmd命令</p>
+<p>输入cd %ProgramFiles% 进入programfiles路径，然后cd MySQL，然后一直输到bin目录。（因为我的安装路径是在这个文件夹里，如果你的不是，请进到bin所在的目录）</p>
+<p>在bin目录下输入mysqld –remove mysql80<br>（如果无法执行，试试mysqld –remove mysql）</p>
+<p>等待执行完成，打开安装目录下看有没有data文件夹。下图是data可能存放的路径，两个都看下。把data文件夹整个复制备份到其他地方，然后删除。<br><img src="https://i.loli.net/2019/08/28/DnjzYdirM7cqmOH.png" alt="Mysql服务无法启动2.PNG"><br><img src="https://i.loli.net/2019/08/28/lDdsWRuhiXYLHVz.png" alt="Mysql服务无法启动3.PNG"></p>
+<p>删除后回到cmd执行下面的命令：mysqld –initialize-insecure–user=mysql</p>
+<p>执行后，输入mysqld –install mysql</p>
+<p>看下刚才的两个路径里是否自动新增了data文件夹，如果都没有就将备份的data复制到原来的路径里。</p>
+<p>然后回到cmd执行命令：net start mysql</p>
+<p>（有时候net start mysql会失败，请根据自身情况自行百度解决。也有时候失败后等几分钟在执行，就发现已经启动了。）</p>
+<p>如果成功启动，打开workbench就可以继续耍啦O(∩_∩)O~~<br></p></font><p></p>
+
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+      
+
+  <article class="post" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/26/MySQL初探——列值转换成行值/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -267,11 +359,19 @@
                 
               
 
-              <time title="Created: 2019-08-26 18:32:31 / Modified: 21:44:04" itemprop="dateCreated datePublished" datetime="2019-08-26T18:32:31+08:00">2019-08-26</time>
+              <time title="Created: 2019-08-26 18:32:31" itemprop="dateCreated datePublished" datetime="2019-08-26T18:32:31+08:00">2019-08-26</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-08-27 12:13:39" itemprop="dateModified" datetime="2019-08-27T12:13:39+08:00">2019-08-27</time>
+              </span>
             
           
 
@@ -288,11 +388,12 @@
       
           <p><img src="https://i0.hippopx.com/photos/522/322/363/learning-study-skills-reading-preview.jpg" alt></p>
 <font color="#000000" size="2">
-当MySQL某个表中需要将列值按照某些条件转换成多个新列并将其值对应到以条件命名的各个新列中时，应该怎么处理呢？
+当MySQL某个表中需要将列值按照某些条件转换成多个新列并将其值对应到以条件命名的各个新列中时，应该怎么处理呢？<br>
+<br>
+例如下表是原始数据，需要按行显示各部门各月份的业绩<br>
+<br>
+Table 1
 
-
-<p>例如下表是原始数据，需要按行显示各部门各月份的业绩</p>
-<p>Table 1</p>
 <table>
 <thead>
 <tr>
@@ -395,9 +496,13 @@
 <p><strong>解决方案： case when 语句</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select distinct table2.Dep_Name,</span><br><span class="line">max(case Month when &apos;一月份&apos; then Yeji else null end) as &apos;一月份&apos;,</span><br><span class="line">max(case Month when &apos;二月份&apos; then Yeji else null end) as &apos;二月份&apos;,</span><br><span class="line">max(case Month when &apos;三月份&apos; then Yeji else null end) as &apos;三月份&apos;</span><br><span class="line">from table1, table2</span><br><span class="line">where table1.Dep_Name=table2.Dep_Name</span><br><span class="line">group by Dep_Name;</span><br></pre></td></tr></table></figure>
 
-<p>首先，选出所需的部门名称，再用case when 将Month列中的各月份转换成行（添加过滤条件：当筛选某月份时，显示Yeji中的值，否则显示NULL）</p>
-<p>其次，将两个表按照Dep_Name关联，以完成select紧跟的部门的中文显示。</p>
-<p>最后，将结果按照部门分组。</p>
+<p><img src="https://i.loli.net/2019/08/27/Gvn3qru8K5wbSfM.png" alt="正确结果.PNG"></p>
+<p>思路：case when 根据某列中不同值进行过滤，然后输出另一列的对应值，并以行形式进行以上相同操作。最后，关联两个表，并按部门分组。</p>
+<p><strong><font color="red">必须将max()函数和case when组合使用</font></strong></p>
+<p>当执行select dep, (case  when mon = ‘三月份’ then yj else null end) as ‘三月份’ from table1; 时可以看到case when将一月份的03部门绩效改写为了NULL，则后面group by Dep_Name时,NULL值会覆盖实际03部门产生的业绩“8”。</p>
+<p><img src="https://i.loli.net/2019/08/27/cCnIMji1prhkuTa.png" alt="捕获.PNG"></p>
+<p>将条件改为二月份时也是如此。在没有max()函数执行语句时，则会返回如下错误结果：</p>
+<p><img src="https://i.loli.net/2019/08/27/brVizKodnpckCj4.png" alt="捕获1.PNG"></p>
 <blockquote>
 <p><strong><font color="#0000CD">这里的case when 语法是：<br><br>　　　case  [col_name]<br><br>　　　when    [value1]    then   [result1]<br><br>　　　when   [value2]     then   [result2]<br><br>　　　else     [default]      end     <br><br>作用：按照条件选值</font></strong></p>
 </blockquote>
@@ -406,7 +511,7 @@
 </blockquote>
 <p>可以将上例写成第二种用法的形式，得出同样结果。</p>
 <p><strong>下面的例子，只适用于第二种用法：</strong></p>
-<p>将符合某条件的值输出为期望的值</p>
+<p>根据特定条件改写值并输出</p>
 <p>原始数据表：</p>
 <p>Score</p>
 <table>
@@ -440,7 +545,7 @@
 </tbody></table>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">(case when 语文 &gt;=80 then &apos;优秀&apos; when 语文 &gt;=60 then &apos;及格&apos; else &apos;不及格&apos; end) 语文,</span><br><span class="line">(case when 数学 &gt;=80 then &apos;优秀&apos; when 数学 &gt;=60 then &apos;及格&apos; else &apos;不及格&apos; end) 数学,</span><br><span class="line">(case when 英语 &gt;=80 then &apos;优秀&apos; when 英语 &gt;=60 then &apos;及格&apos; else &apos;不及格&apos; end) 英语</span><br><span class="line">from course;</span><br></pre></td></tr></table></figure>
 
-<p>首先，语文列中的值若大于等于80则输出“优秀”，60-80之间则为“及格”，小于60则为“不及格”，并命名该列为语文。数学列，英语列同理。</p>
+<p>思路：case when 将某列根据范围筛选条件，然后改写值并输出。</p>
 <p>下一篇将介绍Row_number() over()的用法，以统计总和，观察连续天数，或者显示排名。<br></p></font><p></p>
 
         
@@ -644,7 +749,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
