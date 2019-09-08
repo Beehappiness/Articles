@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    }
+  };
+</script>
+
+  <meta name="description" content="最近在研究排名问题，有点头疼。 首先， 有并列排名的情况下，保留名次空缺，意味着 90,80,80,70 80并列第二，70为第四名。 有并列排名的情况下，不保留名次空缺，意味着90,80,80,70 80并列第二，70为第三名。 下面是实例的详细逻辑拆解 数据源： 要求结果集：根据不同学生同一课程的成绩排名情况（要求不同学生同个课程的分数关系） 步骤一：根据同一课程(left join sc">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL并列排名——保留名次空缺">
+<meta property="og:url" content="http://yoursite.com/2019/09/08/MySQL并列排名——保留名次空缺/index.html">
+<meta property="og:site_name" content="Love Hyunbin&#39;s Blog">
+<meta property="og:description" content="最近在研究排名问题，有点头疼。 首先， 有并列排名的情况下，保留名次空缺，意味着 90,80,80,70 80并列第二，70为第四名。 有并列排名的情况下，不保留名次空缺，意味着90,80,80,70 80并列第二，70为第三名。 下面是实例的详细逻辑拆解 数据源： 要求结果集：根据不同学生同一课程的成绩排名情况（要求不同学生同个课程的分数关系） 步骤一：根据同一课程(left join sc">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://i.loli.net/2019/09/08/gt7SjiVBbzyAW3P.png">
+<meta property="og:image" content="https://i.loli.net/2019/09/08/GpsZb1C7MJAUYcK.png">
+<meta property="og:image" content="https://i.loli.net/2019/09/08/DMa6vxX2hf5yjOg.png">
+<meta property="og:image" content="https://i.loli.net/2019/09/08/qZ4TbnXDfj7wzJS.png">
+<meta property="og:image" content="https://i.loli.net/2019/09/08/2BoObhpDMPgVLnK.png">
+<meta property="og:image" content="https://i.loli.net/2019/09/08/sB1V8wzeSlFLJ5i.png">
+<meta property="og:updated_time" content="2019-09-08T06:39:11.003Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL并列排名——保留名次空缺">
+<meta name="twitter:description" content="最近在研究排名问题，有点头疼。 首先， 有并列排名的情况下，保留名次空缺，意味着 90,80,80,70 80并列第二，70为第四名。 有并列排名的情况下，不保留名次空缺，意味着90,80,80,70 80并列第二，70为第三名。 下面是实例的详细逻辑拆解 数据源： 要求结果集：根据不同学生同一课程的成绩排名情况（要求不同学生同个课程的分数关系） 步骤一：根据同一课程(left join sc">
+<meta name="twitter:image" content="https://i.loli.net/2019/09/08/gt7SjiVBbzyAW3P.png">
+  <link rel="canonical" href="http://yoursite.com/2019/09/08/MySQL并列排名——保留名次空缺/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>MySQL并列排名——保留名次空缺 | Love Hyunbin's Blog</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Love Hyunbin's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Search</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-wrapper">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/MySQL并列排名——保留名次空缺/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Bonnie">
+      <meta itemprop="description" content="Take a Leap of Faith">
+      <meta itemprop="image" content="/images/a03077b6ly1g46hwotkdcj20ek0eldh5.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Love Hyunbin's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">MySQL并列排名——保留名次空缺
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-09-08 12:48:36 / Modified: 14:39:11" itemprop="dateCreated datePublished" datetime="2019-09-08T12:48:36+08:00">2019-09-08</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <font color="#000000" size="2">
+
+<p>最近在研究排名问题，有点头疼。</p>
+<p>首先，</p>
+<p>有并列排名的情况下，保留名次空缺，意味着 90,80,80,70 80并列第二，70为第四名。</p>
+<p>有并列排名的情况下，不保留名次空缺，意味着90,80,80,70 80并列第二，70为第三名。</p>
+<p>下面是实例的详细逻辑拆解</p>
+<p>数据源：<br><img src="https://i.loli.net/2019/09/08/gt7SjiVBbzyAW3P.png" alt="排名1.PNG"></p>
+<p>要求结果集：根据不同学生同一课程的成绩排名情况（要求不同学生同个课程的分数关系）</p>
+<p>步骤一：根据<font color="red"><strong>同一课程</strong></font>(left join score b on <font color="red">a.subject_no=b.subject_no</font> )生成自联结表，选取a表a.st_no, a.subject_no, a.score as sa 和 b表b.score as sb</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select a.st_no,a.subject_no,a.score as sa ,b.score as sb</span><br><span class="line">from score a left join score b on a.subject_no=b.subject_no</span><br></pre></td></tr></table></figure>
+
+<p>得到如下结果：</p>
+<table>
+<thead>
+<tr>
+<th align="left">st_no</th>
+<th align="left">subject_no</th>
+<th align="left">sa</th>
+<th align="left">sb</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">st1</td>
+<td align="left">1</td>
+<td align="left">72</td>
+<td align="left">72</td>
+</tr>
+<tr>
+<td align="left">st3</td>
+<td align="left">1</td>
+<td align="left">87</td>
+<td align="left">72</td>
+</tr>
+<tr>
+<td align="left">st4</td>
+<td align="left">1</td>
+<td align="left">98</td>
+<td align="left">72</td>
+</tr>
+<tr>
+<td align="left">st2</td>
+<td align="left">1</td>
+<td align="left">87</td>
+<td align="left">72</td>
+</tr>
+<tr>
+<td align="left">st1</td>
+<td align="left">1</td>
+<td align="left">72</td>
+<td align="left">87</td>
+</tr>
+<tr>
+<td align="left">st3</td>
+<td align="left">1</td>
+<td align="left">87</td>
+<td align="left">87</td>
+</tr>
+<tr>
+<td align="left">st4</td>
+<td align="left">1</td>
+<td align="left">98</td>
+<td align="left">87</td>
+</tr>
+<tr>
+<td align="left">st2</td>
+<td align="left">1</td>
+<td align="left">87</td>
+<td align="left">87</td>
+</tr>
+<tr>
+<td align="left">st1</td>
+<td align="left">1</td>
+<td align="left">72</td>
+<td align="left">98</td>
+</tr>
+<tr>
+<td align="left">st3</td>
+<td align="left">1</td>
+<td align="left">87</td>
+<td align="left">98</td>
+</tr>
+<tr>
+<td align="left">st4</td>
+<td align="left">1</td>
+<td align="left">98</td>
+<td align="left">98</td>
+</tr>
+<tr>
+<td align="left">st2</td>
+<td align="left">1</td>
+<td align="left">87</td>
+<td align="left">98</td>
+</tr>
+<tr>
+<td align="left">st1</td>
+<td align="left">1</td>
+<td align="left">72</td>
+<td align="left">87</td>
+</tr>
+<tr>
+<td align="left">st3</td>
+<td align="left">1</td>
+<td align="left">87</td>
+<td align="left">87</td>
+</tr>
+<tr>
+<td align="left">st4</td>
+<td align="left">1</td>
+<td align="left">98</td>
+<td align="left">87</td>
+</tr>
+<tr>
+<td align="left">st2</td>
+<td align="left">1</td>
+<td align="left">87</td>
+<td align="left">87</td>
+</tr>
+<tr>
+<td align="left">st1</td>
+<td align="left">2</td>
+<td align="left">89</td>
+<td align="left">89</td>
+</tr>
+<tr>
+<td align="left">st4</td>
+<td align="left">2</td>
+<td align="left">94</td>
+<td align="left">89</td>
+</tr>
+<tr>
+<td align="left">st1</td>
+<td align="left">2</td>
+<td align="left">89</td>
+<td align="left">94</td>
+</tr>
+<tr>
+<td align="left">st4</td>
+<td align="left">2</td>
+<td align="left">94</td>
+<td align="left">94</td>
+</tr>
+<tr>
+<td align="left">st1</td>
+<td align="left">3</td>
+<td align="left">78</td>
+<td align="left">78</td>
+</tr>
+<tr>
+<td align="left">st3</td>
+<td align="left">3</td>
+<td align="left">89</td>
+<td align="left">78</td>
+</tr>
+<tr>
+<td align="left">st1</td>
+<td align="left">3</td>
+<td align="left">78</td>
+<td align="left">89</td>
+</tr>
+<tr>
+<td align="left">st3</td>
+<td align="left">3</td>
+<td align="left">89</td>
+<td align="left">89</td>
+</tr>
+</tbody></table>
+<p>步骤二：筛选a表中的score 小于 b表中的score的行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select a.st_no,a.subject_no,a.score as sa ,b.score as sb</span><br><span class="line">from score a left join score b on a.subject_no=b.subject_no</span><br><span class="line">and a.score &lt; b.score</span><br></pre></td></tr></table></figure>
+
+<p>得到如下结果：</p>
+<p><img src="https://i.loli.net/2019/09/08/GpsZb1C7MJAUYcK.png" alt="排名2.PNG"></p>
+<p>步骤三：根据a表课程，学生，分数分组，计算sb列所对应的行数（即每门课的每位学生a表分数比b表分数低的有几行）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select a.st_no,a.subject_no,a.score as sa, count(b.score)</span><br><span class="line">from score a left join score b on a.subject_no=b.subject_no</span><br><span class="line">and a.score &lt; b.score</span><br><span class="line">group by a.st_no,a.subject_no,a.score order by  a.subject_no,a.score desc;</span><br></pre></td></tr></table></figure>
+
+<p>得到如下结果：</p>
+<p><img src="https://i.loli.net/2019/09/08/DMa6vxX2hf5yjOg.png" alt="排名3.PNG"></p>
+<p>步骤四：上面所得行数+1，即可作为排名。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select a.st_no,a.subject_no,a.score,count(b.score)+1 as r</span><br><span class="line">from score a left join score b on a.subject_no=b.subject_no</span><br><span class="line">and a.score &lt; b.score</span><br><span class="line">group by a.st_no,a.subject_no,a.score order by  a.subject_no,a.score desc;</span><br></pre></td></tr></table></figure>
+
+<p>最终目标结果：</p>
+<p><img src="https://i.loli.net/2019/09/08/qZ4TbnXDfj7wzJS.png" alt="排名正确结果.PNG"></p>
+<p>上一篇介绍的用row_number做排名处理，暂时没有想到如何处理并列名次的问题，或者可能其无法处理并列名次。</p>
+<p>代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select st_no,subject_no,score,row_number()over(partition by subject_no order by score desc) as r</span><br><span class="line">from score group by st_no,subject_no,score</span><br><span class="line">order by subject_no,score desc;</span><br></pre></td></tr></table></figure>
+
+<p>结果如下图：</p>
+<p><img src="https://i.loli.net/2019/09/08/2BoObhpDMPgVLnK.png" alt="row_number排名结果.PNG"><br></p></font><p></p>
+<blockquote>
+<p><font color="#0000CD" size="2"><strong>row_number()over()语法：</strong></font><br><font color="#0000CD" size="2">　　　<strong>over()中的partition by 表示按什么分组标注行数，如果有多个分组要求用“,”连接（不是and），order by 表示按什么排序，默认升序。<br></strong></font></p>
+</blockquote>
+<font color="#000000" size="2">
+
+<p><strong>注意：row_number()over()的设置的分组和排序在group by 之后执行。</strong></p>
+<p>缺陷就是有并列时，仍顺序标注行数。</p>
+<p>BTW，<br>如果步骤一是根据<font color="red"><strong>同一学生</strong></font>(left join score b on <font color="red">a.st_no=b.st_no</font> )生成自联结表，选取a表a.st_no, a.subject_no, a.score as sa 和 b表b.score as sb</p>
+<p>后面步骤同理，则会得到：<br>根据同一学生不同课程的成绩排名情况（要求同个学生不同课程的分数关系）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select a.st_no,a.subject_no,a.score,count(b.score)+1 as r</span><br><span class="line">from score a left join score b on a.st_no=b.st_no</span><br><span class="line">and a.score &lt; b.score</span><br><span class="line">group by a.st_no,a.subject_no,a.score order by  a.subject_no,a.score desc;</span><br></pre></td></tr></table></figure>
+
+<p>结果如图：</p>
+<p><img src="https://i.loli.net/2019/09/08/sB1V8wzeSlFLJ5i.png" alt="排名错误结果.PNG"></p>
+<p>这个扩展可能适用于其他情况，但在此案例下是错误的。<br></p></font><p></p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/08/28/MySQL8-0-Server-Stop-No-Connnection怎么办？/" rel="next" title="MySQL8.0 Server Stop No Connnection怎么办？">
+                  <i class="fa fa-chevron-left"></i> MySQL8.0 Server Stop No Connnection怎么办？
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc" data-target="post-toc-wrap">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/a03077b6ly1g46hwotkdcj20ek0eldh5.jpg"
+      alt="Bonnie">
+  <p class="site-author-name" itemprop="name">Bonnie</p>
+  <div class="site-description motion-element" itemprop="description">Take a Leap of Faith</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        
+        
+          
+        
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+        
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/Beehappiness" title="GitHub &rarr; https://github.com/Beehappiness" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Bonnie</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.3.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.3.0"></script><script src="/js/motion.js?v=7.3.0"></script>
+<script src="/js/schemes/pisces.js?v=7.3.0"></script>
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/post-details.js?v=7.3.0"></script>
+
+
+</body>
+</html>

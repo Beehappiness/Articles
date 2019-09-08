@@ -238,6 +238,282 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/MySQL并列排名——保留名次空缺/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Bonnie">
+      <meta itemprop="description" content="Take a Leap of Faith">
+      <meta itemprop="image" content="/images/a03077b6ly1g46hwotkdcj20ek0eldh5.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Love Hyunbin's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="/2019/09/08/MySQL并列排名——保留名次空缺/" class="post-title-link" itemprop="url">MySQL并列排名——保留名次空缺</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-09-08 12:48:36 / Modified: 14:39:11" itemprop="dateCreated datePublished" datetime="2019-09-08T12:48:36+08:00">2019-09-08</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <font color="#000000" size="2">
+
+<p>最近在研究排名问题，有点头疼。</p>
+<p>首先，</p>
+<p>有并列排名的情况下，保留名次空缺，意味着 90,80,80,70 80并列第二，70为第四名。</p>
+<p>有并列排名的情况下，不保留名次空缺，意味着90,80,80,70 80并列第二，70为第三名。</p>
+<p>下面是实例的详细逻辑拆解</p>
+<p>数据源：<br><img src="https://i.loli.net/2019/09/08/gt7SjiVBbzyAW3P.png" alt="排名1.PNG"></p>
+<p>要求结果集：根据不同学生同一课程的成绩排名情况（要求不同学生同个课程的分数关系）</p>
+<p>步骤一：根据<font color="red"><strong>同一课程</strong></font>(left join score b on <font color="red">a.subject_no=b.subject_no</font> )生成自联结表，选取a表a.st_no, a.subject_no, a.score as sa 和 b表b.score as sb</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select a.st_no,a.subject_no,a.score as sa ,b.score as sb</span><br><span class="line">from score a left join score b on a.subject_no=b.subject_no</span><br></pre></td></tr></table></figure>
+
+<p>得到如下结果：</p>
+<table>
+<thead>
+<tr>
+<th align="left">st_no</th>
+<th align="left">subject_no</th>
+<th align="left">sa</th>
+<th align="left">sb</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">st1</td>
+<td align="left">1</td>
+<td align="left">72</td>
+<td align="left">72</td>
+</tr>
+<tr>
+<td align="left">st3</td>
+<td align="left">1</td>
+<td align="left">87</td>
+<td align="left">72</td>
+</tr>
+<tr>
+<td align="left">st4</td>
+<td align="left">1</td>
+<td align="left">98</td>
+<td align="left">72</td>
+</tr>
+<tr>
+<td align="left">st2</td>
+<td align="left">1</td>
+<td align="left">87</td>
+<td align="left">72</td>
+</tr>
+<tr>
+<td align="left">st1</td>
+<td align="left">1</td>
+<td align="left">72</td>
+<td align="left">87</td>
+</tr>
+<tr>
+<td align="left">st3</td>
+<td align="left">1</td>
+<td align="left">87</td>
+<td align="left">87</td>
+</tr>
+<tr>
+<td align="left">st4</td>
+<td align="left">1</td>
+<td align="left">98</td>
+<td align="left">87</td>
+</tr>
+<tr>
+<td align="left">st2</td>
+<td align="left">1</td>
+<td align="left">87</td>
+<td align="left">87</td>
+</tr>
+<tr>
+<td align="left">st1</td>
+<td align="left">1</td>
+<td align="left">72</td>
+<td align="left">98</td>
+</tr>
+<tr>
+<td align="left">st3</td>
+<td align="left">1</td>
+<td align="left">87</td>
+<td align="left">98</td>
+</tr>
+<tr>
+<td align="left">st4</td>
+<td align="left">1</td>
+<td align="left">98</td>
+<td align="left">98</td>
+</tr>
+<tr>
+<td align="left">st2</td>
+<td align="left">1</td>
+<td align="left">87</td>
+<td align="left">98</td>
+</tr>
+<tr>
+<td align="left">st1</td>
+<td align="left">1</td>
+<td align="left">72</td>
+<td align="left">87</td>
+</tr>
+<tr>
+<td align="left">st3</td>
+<td align="left">1</td>
+<td align="left">87</td>
+<td align="left">87</td>
+</tr>
+<tr>
+<td align="left">st4</td>
+<td align="left">1</td>
+<td align="left">98</td>
+<td align="left">87</td>
+</tr>
+<tr>
+<td align="left">st2</td>
+<td align="left">1</td>
+<td align="left">87</td>
+<td align="left">87</td>
+</tr>
+<tr>
+<td align="left">st1</td>
+<td align="left">2</td>
+<td align="left">89</td>
+<td align="left">89</td>
+</tr>
+<tr>
+<td align="left">st4</td>
+<td align="left">2</td>
+<td align="left">94</td>
+<td align="left">89</td>
+</tr>
+<tr>
+<td align="left">st1</td>
+<td align="left">2</td>
+<td align="left">89</td>
+<td align="left">94</td>
+</tr>
+<tr>
+<td align="left">st4</td>
+<td align="left">2</td>
+<td align="left">94</td>
+<td align="left">94</td>
+</tr>
+<tr>
+<td align="left">st1</td>
+<td align="left">3</td>
+<td align="left">78</td>
+<td align="left">78</td>
+</tr>
+<tr>
+<td align="left">st3</td>
+<td align="left">3</td>
+<td align="left">89</td>
+<td align="left">78</td>
+</tr>
+<tr>
+<td align="left">st1</td>
+<td align="left">3</td>
+<td align="left">78</td>
+<td align="left">89</td>
+</tr>
+<tr>
+<td align="left">st3</td>
+<td align="left">3</td>
+<td align="left">89</td>
+<td align="left">89</td>
+</tr>
+</tbody></table>
+<p>步骤二：筛选a表中的score 小于 b表中的score的行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select a.st_no,a.subject_no,a.score as sa ,b.score as sb</span><br><span class="line">from score a left join score b on a.subject_no=b.subject_no</span><br><span class="line">and a.score &lt; b.score</span><br></pre></td></tr></table></figure>
+
+<p>得到如下结果：</p>
+<p><img src="https://i.loli.net/2019/09/08/GpsZb1C7MJAUYcK.png" alt="排名2.PNG"></p>
+<p>步骤三：根据a表课程，学生，分数分组，计算sb列所对应的行数（即每门课的每位学生a表分数比b表分数低的有几行）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select a.st_no,a.subject_no,a.score as sa, count(b.score)</span><br><span class="line">from score a left join score b on a.subject_no=b.subject_no</span><br><span class="line">and a.score &lt; b.score</span><br><span class="line">group by a.st_no,a.subject_no,a.score order by  a.subject_no,a.score desc;</span><br></pre></td></tr></table></figure>
+
+<p>得到如下结果：</p>
+<p><img src="https://i.loli.net/2019/09/08/DMa6vxX2hf5yjOg.png" alt="排名3.PNG"></p>
+<p>步骤四：上面所得行数+1，即可作为排名。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select a.st_no,a.subject_no,a.score,count(b.score)+1 as r</span><br><span class="line">from score a left join score b on a.subject_no=b.subject_no</span><br><span class="line">and a.score &lt; b.score</span><br><span class="line">group by a.st_no,a.subject_no,a.score order by  a.subject_no,a.score desc;</span><br></pre></td></tr></table></figure>
+
+<p>最终目标结果：</p>
+<p><img src="https://i.loli.net/2019/09/08/qZ4TbnXDfj7wzJS.png" alt="排名正确结果.PNG"></p>
+<p>上一篇介绍的用row_number做排名处理，暂时没有想到如何处理并列名次的问题，或者可能其无法处理并列名次。</p>
+<p>代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select st_no,subject_no,score,row_number()over(partition by subject_no order by score desc) as r</span><br><span class="line">from score group by st_no,subject_no,score</span><br><span class="line">order by subject_no,score desc;</span><br></pre></td></tr></table></figure>
+
+<p>结果如下图：</p>
+<p><img src="https://i.loli.net/2019/09/08/2BoObhpDMPgVLnK.png" alt="row_number排名结果.PNG"><br></p></font><p></p>
+<blockquote>
+<p><font color="#0000CD" size="2"><strong>row_number()over()语法：</strong></font><br><font color="#0000CD" size="2">　　　<strong>over()中的partition by 表示按什么分组标注行数，如果有多个分组要求用“,”连接（不是and），order by 表示按什么排序，默认升序。<br></strong></font></p>
+</blockquote>
+<font color="#000000" size="2">
+
+<p><strong>注意：row_number()over()的设置的分组和排序在group by 之后执行。</strong></p>
+<p>缺陷就是有并列时，仍顺序标注行数。</p>
+<p>BTW，<br>如果步骤一是根据<font color="red"><strong>同一学生</strong></font>(left join score b on <font color="red">a.st_no=b.st_no</font> )生成自联结表，选取a表a.st_no, a.subject_no, a.score as sa 和 b表b.score as sb</p>
+<p>后面步骤同理，则会得到：<br>根据同一学生不同课程的成绩排名情况（要求同个学生不同课程的分数关系）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select a.st_no,a.subject_no,a.score,count(b.score)+1 as r</span><br><span class="line">from score a left join score b on a.st_no=b.st_no</span><br><span class="line">and a.score &lt; b.score</span><br><span class="line">group by a.st_no,a.subject_no,a.score order by  a.subject_no,a.score desc;</span><br></pre></td></tr></table></figure>
+
+<p>结果如图：</p>
+<p><img src="https://i.loli.net/2019/09/08/sB1V8wzeSlFLJ5i.png" alt="排名错误结果.PNG"></p>
+<p>这个扩展可能适用于其他情况，但在此案例下是错误的。<br></p></font><p></p>
+
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+      
+
+  <article class="post" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/28/MySQL8-0-Server-Stop-No-Connnection怎么办？/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -749,7 +1025,7 @@ Table 1
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
