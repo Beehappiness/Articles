@@ -54,17 +54,22 @@
   };
 </script>
 
-  <meta name="description" content="Take a Leap of Faith">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Love Hyunbin&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/tags/MySQL/index.html">
+  <meta name="description" content="根据上一篇保留名次空缺的逻辑，可以将步骤二的结果按课程，分数降序排序：   当计算subject_no=1, st_no=st1的行数时，即count(b.score)对应得数为3（b.score列87,98,87，且87记了两次）而subject_no=1, st_no=st2; subject_no=1, st_no=st3的行数都为1。 所以很容易看出如果count(distinct b.">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL并列排名——不保留名次空缺">
+<meta property="og:url" content="http://yoursite.com/2019/09/08/MySQL并列排名——不保留名次空缺/index.html">
 <meta property="og:site_name" content="Love Hyunbin&#39;s Blog">
-<meta property="og:description" content="Take a Leap of Faith">
+<meta property="og:description" content="根据上一篇保留名次空缺的逻辑，可以将步骤二的结果按课程，分数降序排序：   当计算subject_no=1, st_no=st1的行数时，即count(b.score)对应得数为3（b.score列87,98,87，且87记了两次）而subject_no=1, st_no=st2; subject_no=1, st_no=st3的行数都为1。 所以很容易看出如果count(distinct b.">
 <meta property="og:locale" content="en">
+<meta property="og:image" content="https://i.loli.net/2019/09/08/xAjpwa2YPuqZSFX.png">
+<meta property="og:image" content="https://i.loli.net/2019/09/08/l4iGeNwznOqECXx.png">
+<meta property="og:updated_time" content="2019-09-15T11:59:07.784Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Love Hyunbin&#39;s Blog">
-<meta name="twitter:description" content="Take a Leap of Faith">
-  <link rel="canonical" href="http://yoursite.com/tags/MySQL/">
+<meta name="twitter:title" content="MySQL并列排名——不保留名次空缺">
+<meta name="twitter:description" content="根据上一篇保留名次空缺的逻辑，可以将步骤二的结果按课程，分数降序排序：   当计算subject_no=1, st_no=st1的行数时，即count(b.score)对应得数为3（b.score列87,98,87，且87记了两次）而subject_no=1, st_no=st2; subject_no=1, st_no=st3的行数都为1。 所以很容易看出如果count(distinct b.">
+<meta name="twitter:image" content="https://i.loli.net/2019/09/08/xAjpwa2YPuqZSFX.png">
+  <link rel="canonical" href="http://yoursite.com/2019/09/08/MySQL并列排名——不保留名次空缺/">
 
 
 <script id="page-configurations">
@@ -72,13 +77,13 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false,
+    isPost: true,
     isPage: false,
     isArchive: false
   };
 </script>
 
-  <title>Tag: MySQL | Love Hyunbin's Blog</title>
+  <title>MySQL并列排名——不保留名次空缺 | Love Hyunbin's Blog</title>
   <meta name="generator" content="Hexo 3.9.0">
   
 
@@ -228,199 +233,136 @@
         <div class="content-wrap">
             
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-          <div id="content" class="content ">
+          <div id="content" class="content page-post-detail">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1 class="collection-header">MySQL<small>Tag</small>
+  <article class="post" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/MySQL并列排名——不保留名次空缺/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Bonnie">
+      <meta itemprop="description" content="Take a Leap of Faith">
+      <meta itemprop="image" content="/images/a03077b6ly1g46hwotkdcj20ek0eldh5.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Love Hyunbin's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">MySQL并列排名——不保留名次空缺
+
+          
         </h1>
-      </div>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-09-08 17:18:24" itemprop="dateCreated datePublished" datetime="2019-09-08T17:18:24+08:00">2019-09-08</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-09-15 19:59:07" itemprop="dateModified" datetime="2019-09-15T19:59:07+08:00">2019-09-15</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
+        <font color="#000000" size="2">
+根据上一篇保留名次空缺的逻辑，可以将步骤二的结果按课程，分数降序排序：
 
-  
-  
+<p><img src="https://i.loli.net/2019/09/08/xAjpwa2YPuqZSFX.png" alt="不保留名次1.PNG"></p>
+<p>当计算subject_no=1, st_no=st1的行数时，即count(b.score)对应得数为3（b.score列87,98,87，且87记了两次）而subject_no=1, st_no=st2; subject_no=1, st_no=st3的行数都为1。</p>
+<p>所以很容易看出如果count(distinct b.score)时，subject_no=1, st_no=st1的行数则变成了2。</p>
+<p>此时再按原步骤三逐步进行即可得到不保留名次空缺的并列排名结果。</p>
+<p>代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select a.subject_no,a.st_no,a.score, count(distinct b.score)+1 as 不保留名次空缺的排名 from score a</span><br><span class="line">left join score b on a.subject_no=b.subject_no and a.score &lt; b.score</span><br><span class="line">group by a.subject_no,a.st_no,a.score</span><br><span class="line">order by a.subject_no, a.score desc,st_no;</span><br></pre></td></tr></table></figure>
 
-  
+<p>结果如下：</p>
+<p><img src="https://i.loli.net/2019/09/08/l4iGeNwznOqECXx.png" alt="不保留名次空缺正确结果.PNG"></p>
+</font>
+
+    </div>
+
     
-    <div class="collection-year">
-      <h1 class="collection-header">2019</h1>
-    </div>
-  
-
-  <article class="post" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
+    
+    
         
-          <a class="post-title-link" href="/2019/09/15/MySQL多行合并成一行vs一行拆分成多行/" itemprop="url">
-            <span itemprop="name">MySQL多行合并成一行vs一行拆分成多行</span>
-          </a>
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+            
+          </div>
         
-      </h2>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-09-15T11:15:24+08:00"
-              content="2019-09-15">
-          09-15
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-  
-  
-
-  
-
-  <article class="post" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
         
-          <a class="post-title-link" href="/2019/09/08/MySQL并列排名——不保留名次空缺/" itemprop="url">
-            <span itemprop="name">MySQL并列排名——不保留名次空缺</span>
-          </a>
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/09/08/MySQL并列排名——保留名次空缺/" rel="next" title="MySQL并列排名——保留名次空缺">
+                  <i class="fa fa-chevron-left"></i> MySQL并列排名——保留名次空缺
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/09/15/MySQL多行合并成一行vs一行拆分成多行/" rel="prev" title="MySQL多行合并成一行vs一行拆分成多行">
+                  MySQL多行合并成一行vs一行拆分成多行 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
         
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-09-08T17:18:24+08:00"
-              content="2019-09-08">
-          09-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-  
-  
-
-  
-
-  <article class="post" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2019/09/08/MySQL并列排名——保留名次空缺/" itemprop="url">
-            <span itemprop="name">MySQL并列排名——保留名次空缺</span>
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-09-08T12:48:36+08:00"
-              content="2019-09-08">
-          09-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-  
-  
-
-  
-
-  <article class="post" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2019/08/28/MySQL8-0-Server-Stop-No-Connnection怎么办？/" itemprop="url">
-            <span itemprop="name">MySQL8.0 Server Stop No Connnection怎么办？</span>
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-08-28T14:50:54+08:00"
-              content="2019-08-28">
-          08-28
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-  
-  
-
-  
-
-  <article class="post" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2019/08/26/MySQL初探——列值转换成行值/" itemprop="url">
-            <span itemprop="name">MySQL初探——列值转换成行值</span>
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-08-26T18:32:31+08:00"
-              content="2019-08-26">
-          08-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    </div>
-
+      </footer>
+    
   </div>
   
   
   
+  </article>
 
-  
-
+  </div>
 
 
           </div>
@@ -439,6 +381,11 @@
 
   <aside id="sidebar" class="sidebar">
     <div class="sidebar-inner">
+        
+        
+        
+        
+      
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc" data-target="post-toc-wrap">
@@ -594,5 +541,8 @@
 
 
   
+  <script src="/js/post-details.js?v=7.3.0"></script>
+
+
 </body>
 </html>

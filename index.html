@@ -238,6 +238,599 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/15/MySQL多行合并成一行vs一行拆分成多行/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Bonnie">
+      <meta itemprop="description" content="Take a Leap of Faith">
+      <meta itemprop="image" content="/images/a03077b6ly1g46hwotkdcj20ek0eldh5.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Love Hyunbin's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="/2019/09/15/MySQL多行合并成一行vs一行拆分成多行/" class="post-title-link" itemprop="url">MySQL多行合并成一行vs一行拆分成多行</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-09-15 11:15:24 / Modified: 18:19:42" itemprop="dateCreated datePublished" datetime="2019-09-15T11:15:24+08:00">2019-09-15</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <font color="#000000" size="2">
+这篇文章主要是因为来自一道面试题：
+
+<p><img src="https://i.loli.net/2019/09/15/wYOjyqdTDrBS6QF.png" alt="面试题.PNG"></p>
+<p>请写出一下sql逻辑：<br>A，    将tableA输出为tableB的格式；<br>B，    将tableB输出为tableA的格式；</p>
+<p>A答案：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select qq, group_concat(game separator &apos;_&apos;) from tablea group by qq;</span><br></pre></td></tr></table></figure>
+
+<p>B答案：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select qq,</span><br><span class="line">substring_index(substring_index(tableb.game,&apos;,&apos;,mysql.help_topic.help_topic_id+1),&apos;,&apos;,-1)</span><br><span class="line">from</span><br><span class="line">tableb</span><br><span class="line">inner join</span><br><span class="line">mysql.help_topic</span><br><span class="line">on mysql.help_topic.help_topic_id &lt; (length(tableb.game) - length(replace(tableb.game,&apos;,&apos;,&apos;&apos;))+1);</span><br></pre></td></tr></table></figure>
+
+<p>group_concat 语法及案例详见：<br><a href="https://www.cnblogs.com/zhuawang/p/5928982.html" target="_blank" rel="noopener">https://www.cnblogs.com/zhuawang/p/5928982.html</a></p>
+<p>B答案的思路拆解：<br>利用mysql库中help_topic表id列从0-500+的数值，基于笛卡尔积的原理将game列的文本join给指定字段（qq）并生成原文本相应拆分后的行数，同时利用substring_index()函数配合join的help_topic_id拆分出该行第i个’,’之前的文本后，再用substring_index()拆分该行从右边开始数，第1个分隔符右边的所有内容。即得到最终结果。</p>
+<p>首先在数据库中创建表格及数据，此处为了偷懒，我把数据插到了一个已存在的空列中。</p>
+<p>数据源如下：table_user表</p>
+<p><img src="https://i.loli.net/2019/09/15/jMeiPxLZBS9WhJz.png" alt="解题数据源.PNG"></p>
+<p>property列为目标拆分列。</p>
+<p>分解如下：</p>
+<p><strong>inner join的方法：</strong></p>
+<blockquote>
+<p>length(table_user.property) 计算property行的文本长度（英文为1个字符，中文为3个字符。）</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select qq,property, length(table_user.property) from table_user;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2019/09/15/MPRQZfYn3SldNEt.png" alt="解题步骤1.PNG"></p>
+<blockquote>
+<p>length(replace(table_user.property,’,’,’’))计算替换掉’,’后的文本长度</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select qq,property,replace(table_user.property,&apos;,&apos;,&apos;&apos;), length(replace(table_user.property,&apos;,&apos;,&apos;&apos;)) from table_user;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2019/09/15/gZYStBUswrGxqQC.png" alt="解题步骤2.PNG"></p>
+<blockquote>
+<p>按照以上（两个长度的差值+1）即为原文本拆分后所需的行数，并以此根据笛卡尔积原理inner join table_user表准备进行下一步拆分的基础。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select qq,property from table_user</span><br><span class="line">inner join</span><br><span class="line">mysql.help_topic</span><br><span class="line">on mysql.help_topic.help_topic_id &lt; (length(table_user.property) - length(replace(table_user.property,&apos;,&apos;,&apos;&apos;))+1);</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="left">qq</th>
+<th align="left">property</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1000</td>
+<td align="left">a,b,c,c</td>
+</tr>
+<tr>
+<td align="left">1000</td>
+<td align="left">a,b,c,c</td>
+</tr>
+<tr>
+<td align="left">1000</td>
+<td align="left">a,b,c,c</td>
+</tr>
+<tr>
+<td align="left">1000</td>
+<td align="left">a,b,c,c</td>
+</tr>
+<tr>
+<td align="left">10000</td>
+<td align="left">a,b,c,d,efg</td>
+</tr>
+<tr>
+<td align="left">10000</td>
+<td align="left">a,b,c,d,efg</td>
+</tr>
+<tr>
+<td align="left">10000</td>
+<td align="left">a,b,c,d,efg</td>
+</tr>
+<tr>
+<td align="left">10000</td>
+<td align="left">a,b,c,d,efg</td>
+</tr>
+<tr>
+<td align="left">10000</td>
+<td align="left">a,b,c,d,efg</td>
+</tr>
+<tr>
+<td align="left">20000</td>
+<td align="left">ieng,sieng,fid,q,d</td>
+</tr>
+<tr>
+<td align="left">20000</td>
+<td align="left">ieng,sieng,fid,q,d</td>
+</tr>
+<tr>
+<td align="left">20000</td>
+<td align="left">ieng,sieng,fid,q,d</td>
+</tr>
+<tr>
+<td align="left">20000</td>
+<td align="left">ieng,sieng,fid,q,d</td>
+</tr>
+<tr>
+<td align="left">20000</td>
+<td align="left">ieng,sieng,fid,q,d</td>
+</tr>
+<tr>
+<td align="left">40000</td>
+<td align="left">e,f</td>
+</tr>
+<tr>
+<td align="left">40000</td>
+<td align="left">e,f</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">i,s,w,e,r,t,s,x,g,gq,l</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">i,s,w,e,r,t,s,x,g,gq,l</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">i,s,w,e,r,t,s,x,g,gq,l</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">i,s,w,e,r,t,s,x,g,gq,l</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">i,s,w,e,r,t,s,x,g,gq,l</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">i,s,w,e,r,t,s,x,g,gq,l</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">i,s,w,e,r,t,s,x,g,gq,l</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">i,s,w,e,r,t,s,x,g,gq,l</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">i,s,w,e,r,t,s,x,g,gq,l</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">i,s,w,e,r,t,s,x,g,gq,l</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">i,s,w,e,r,t,s,x,g,gq,l</td>
+</tr>
+</tbody></table>
+<p><strong>文本拆分：</strong><br>substring_index()语法详见：<a href="https://www.cnblogs.com/mqxs/p/7380933.html" target="_blank" rel="noopener">https://www.cnblogs.com/mqxs/p/7380933.html</a></p>
+<blockquote>
+<p>将文本根据id分割：当前行所在id+1=获取第i个’,’之前的文本，因为id从0开始，所以应为id+1</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select qq,mysql.help_topic.help_topic_id,</span><br><span class="line">substring_index(table_user.property,&apos;,&apos;,mysql.help_topic.help_topic_id+1)</span><br><span class="line">from</span><br><span class="line">table_user</span><br><span class="line">inner join</span><br><span class="line">mysql.help_topic</span><br><span class="line">on mysql.help_topic.help_topic_id &lt; (length(table_user.property) - length(replace(table_user.property,&apos;,&apos;,&apos;&apos;))+1);</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="left">qq</th>
+<th align="left">help_topic_id</th>
+<th align="left">substring_index(table_user.property,’,’,mysql.help_topic.help_topic_id+1)substring_index(table_user.property,’,’,mysql.help_topic.help_topic_id+1)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1000</td>
+<td align="left">0</td>
+<td align="left">a</td>
+</tr>
+<tr>
+<td align="left">1000</td>
+<td align="left">1</td>
+<td align="left">a,b</td>
+</tr>
+<tr>
+<td align="left">1000</td>
+<td align="left">2</td>
+<td align="left">a,b,c</td>
+</tr>
+<tr>
+<td align="left">1000</td>
+<td align="left">3</td>
+<td align="left">a,b,c,c</td>
+</tr>
+<tr>
+<td align="left">10000</td>
+<td align="left">0</td>
+<td align="left">a</td>
+</tr>
+<tr>
+<td align="left">10000</td>
+<td align="left">1</td>
+<td align="left">a,b</td>
+</tr>
+<tr>
+<td align="left">10000</td>
+<td align="left">2</td>
+<td align="left">a,b,c</td>
+</tr>
+<tr>
+<td align="left">10000</td>
+<td align="left">3</td>
+<td align="left">a,b,c,d</td>
+</tr>
+<tr>
+<td align="left">10000</td>
+<td align="left">4</td>
+<td align="left">a,b,c,d,efg</td>
+</tr>
+<tr>
+<td align="left">20000</td>
+<td align="left">0</td>
+<td align="left">ieng</td>
+</tr>
+<tr>
+<td align="left">20000</td>
+<td align="left">1</td>
+<td align="left">ieng,sieng</td>
+</tr>
+<tr>
+<td align="left">20000</td>
+<td align="left">2</td>
+<td align="left">ieng,sieng,fid</td>
+</tr>
+<tr>
+<td align="left">20000</td>
+<td align="left">3</td>
+<td align="left">ieng,sieng,fid,q</td>
+</tr>
+<tr>
+<td align="left">20000</td>
+<td align="left">4</td>
+<td align="left">ieng,sieng,fid,q,d</td>
+</tr>
+<tr>
+<td align="left">40000</td>
+<td align="left">0</td>
+<td align="left">e</td>
+</tr>
+<tr>
+<td align="left">40000</td>
+<td align="left">1</td>
+<td align="left">e,f</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">0</td>
+<td align="left">i</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">1</td>
+<td align="left">i,s</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">2</td>
+<td align="left">i,s,w</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">3</td>
+<td align="left">i,s,w,e</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">4</td>
+<td align="left">i,s,w,e,r</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">5</td>
+<td align="left">i,s,w,e,r,t</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">6</td>
+<td align="left">i,s,w,e,r,t,s</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">7</td>
+<td align="left">i,s,w,e,r,t,s,x</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">8</td>
+<td align="left">i,s,w,e,r,t,s,x,g</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">9</td>
+<td align="left">i,s,w,e,r,t,s,x,g,gq</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">10</td>
+<td align="left">i,s,w,e,r,t,s,x,g,gq,l</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>再取每行文本从右边开始数，第1个分隔符右边的所有内容，即可。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select qq,</span><br><span class="line">substring_index(substring_index(table_user.property,&apos;,&apos;,mysql.help_topic.help_topic_id+1),&apos;,&apos;,-1)</span><br><span class="line">from</span><br><span class="line">table_user</span><br><span class="line">inner join</span><br><span class="line">mysql.help_topic</span><br><span class="line">on mysql.help_topic.help_topic_id &lt; (length(table_user.property) - length(replace(table_user.property,&apos;,&apos;,&apos;&apos;))+1);</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="left">qq</th>
+<th align="left">substring_index(substring_index(table_user.property,’,’,mysql.help_topic.help_topic_id+1),’,’,-1)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1000</td>
+<td align="left">a</td>
+</tr>
+<tr>
+<td align="left">1000</td>
+<td align="left">b</td>
+</tr>
+<tr>
+<td align="left">1000</td>
+<td align="left">c</td>
+</tr>
+<tr>
+<td align="left">1000</td>
+<td align="left">c</td>
+</tr>
+<tr>
+<td align="left">10000</td>
+<td align="left">a</td>
+</tr>
+<tr>
+<td align="left">10000</td>
+<td align="left">b</td>
+</tr>
+<tr>
+<td align="left">10000</td>
+<td align="left">c</td>
+</tr>
+<tr>
+<td align="left">10000</td>
+<td align="left">d</td>
+</tr>
+<tr>
+<td align="left">10000</td>
+<td align="left">efg</td>
+</tr>
+<tr>
+<td align="left">20000</td>
+<td align="left">ieng</td>
+</tr>
+<tr>
+<td align="left">20000</td>
+<td align="left">sieng</td>
+</tr>
+<tr>
+<td align="left">20000</td>
+<td align="left">fid</td>
+</tr>
+<tr>
+<td align="left">20000</td>
+<td align="left">q</td>
+</tr>
+<tr>
+<td align="left">20000</td>
+<td align="left">d</td>
+</tr>
+<tr>
+<td align="left">40000</td>
+<td align="left">e</td>
+</tr>
+<tr>
+<td align="left">40000</td>
+<td align="left">f</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">i</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">s</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">w</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">r</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">t</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">e</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">s</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">x</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">g</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">gq</td>
+</tr>
+<tr>
+<td align="left">30000</td>
+<td align="left">l</td>
+</tr>
+</tbody></table>
+</font>
+
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+      
+
+  <article class="post" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/MySQL并列排名——不保留名次空缺/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Bonnie">
+      <meta itemprop="description" content="Take a Leap of Faith">
+      <meta itemprop="image" content="/images/a03077b6ly1g46hwotkdcj20ek0eldh5.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Love Hyunbin's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="/2019/09/08/MySQL并列排名——不保留名次空缺/" class="post-title-link" itemprop="url">MySQL并列排名——不保留名次空缺</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-09-08 17:18:24" itemprop="dateCreated datePublished" datetime="2019-09-08T17:18:24+08:00">2019-09-08</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-09-15 19:59:07" itemprop="dateModified" datetime="2019-09-15T19:59:07+08:00">2019-09-15</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <font color="#000000" size="2">
+根据上一篇保留名次空缺的逻辑，可以将步骤二的结果按课程，分数降序排序：
+
+<p><img src="https://i.loli.net/2019/09/08/xAjpwa2YPuqZSFX.png" alt="不保留名次1.PNG"></p>
+<p>当计算subject_no=1, st_no=st1的行数时，即count(b.score)对应得数为3（b.score列87,98,87，且87记了两次）而subject_no=1, st_no=st2; subject_no=1, st_no=st3的行数都为1。</p>
+<p>所以很容易看出如果count(distinct b.score)时，subject_no=1, st_no=st1的行数则变成了2。</p>
+<p>此时再按原步骤三逐步进行即可得到不保留名次空缺的并列排名结果。</p>
+<p>代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select a.subject_no,a.st_no,a.score, count(distinct b.score)+1 as 不保留名次空缺的排名 from score a</span><br><span class="line">left join score b on a.subject_no=b.subject_no and a.score &lt; b.score</span><br><span class="line">group by a.subject_no,a.st_no,a.score</span><br><span class="line">order by a.subject_no, a.score desc,st_no;</span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<p><img src="https://i.loli.net/2019/09/08/l4iGeNwznOqECXx.png" alt="不保留名次空缺正确结果.PNG"></p>
+</font>
+
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+      
+
+  <article class="post" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/MySQL并列排名——保留名次空缺/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1025,7 +1618,7 @@ Table 1
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
