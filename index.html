@@ -238,6 +238,90 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/15/解决Pycharm新建项目加载已安装好的第三方库问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Bonnie">
+      <meta itemprop="description" content="Take a Leap of Faith">
+      <meta itemprop="image" content="/images/a03077b6ly1g46hwotkdcj20ek0eldh5.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Love Hyunbin's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="/2020/01/15/解决Pycharm新建项目加载已安装好的第三方库问题/" class="post-title-link" itemprop="url">解决Pycharm新建项目加载已安装好的第三方库问题</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2020-01-15 20:48:54 / Modified: 21:55:45" itemprop="dateCreated datePublished" datetime="2020-01-15T20:48:54+08:00">2020-01-15</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <font color="#000000" size="2">
+Pycharm中新建project时为避免重新安装第三方库可选择Existing interpreter来继承已有项目使用的的第三方库
+
+<p><img src="https://i.loli.net/2020/01/15/OEqXjlkseR8Hhvf.png" alt="截图1.PNG"></p>
+<p>若选择New environment using选项则得到了一个不带任何第三方包的“干净”的Python虚拟环境，已经安装到系统Python环境中的所有第三方包都不会复制过来。</p>
+<p>若项目已经新建好，则可通过添加项目所用的python的site-package的路径解决<br>下图右上角进入edit configurations  –&gt; 点击加号选择 python –&gt;进入environment variables<br><img src="https://i.loli.net/2020/01/15/1jYVGkHZ75tmAKW.png" alt="截图2.PNG"></p>
+<p>添加 Name：PATHONPATH    Value：安装路径<br><img src="https://i.loli.net/2020/01/15/X9uA1VKrifNv7OP.png" alt="截图3.PNG"></p>
+<p>如何查找第三方包的安装路径：<br>打开python –&gt; 输入 import numpy或者其他包的名称 –&gt; print(sklearn.<strong>file</strong>)</p>
+<p>返回路径copy到site-packages即可。<br>粘贴全路径\AppData\Local\Programs\Python\Python37\lib\site-packages\</p>
+</font>
+
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+      
+
+  <article class="post" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/15/MySQL多行合并成一行vs一行拆分成多行/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1618,7 +1702,7 @@ Table 1
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1666,7 +1750,7 @@ Table 1
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
